@@ -7,7 +7,6 @@ import SearchBar from "./searchBar/searchBar";
 import ImageGallery from "./imageGallery/imageGallery";
 import Button from "./button/button";
 // import Modal from "./modal/modal";
-import ImageGalleryItem from "./imageGalleryItem/imageGalleryItem";
 import fetchGallery from "../services/galleryAPI";
 
 export default class App extends Component {
@@ -19,39 +18,38 @@ export default class App extends Component {
     status: "idle",
   };
 
-  componentDidUpdate(prevProps, _prevState) {
-    const prevKeyword = prevProps.keyword;
+  componentDidUpdate(_prevProps, prevState) {
+    const prevKeyword = prevState.keyword;
     const nextKeyword = this.state.keyword;
     const page = this.state.page;
 
     if (prevKeyword !== nextKeyword) {
-      // this.setState({ status: "pending" });
+      this.setState({ status: "pending" });
 
-      fetchGallery(nextKeyword, page).then((galleryItems) =>
-        this.setState({ galleryItems })
-      );
-      // .catch(this.setState({ status: "rejected" }));
+      fetchGallery(nextKeyword, page)
+        .then((galleryArray) =>
+          this.setState({ galleryItems: galleryArray.hits, status: "resolved" })
+        )
+        .catch((error) => this.setState({ error, status: "reject" }));
     }
   }
 
   handleFormSubmit = (keyword) => {
     this.setState({ keyword: keyword });
   };
+  // openModal = (event) => {
+  //   modal((image = { event.currentTarget }));
+  // };
 
   render() {
-    const galleryItems = this.state.galleryItems;
+    const { galleryItems, error } = this.state;
     return (
       <div className="App">
         <SearchBar formSubmit={this.handleFormSubmit} />
-        <ImageGallery>
-          {galleryItems !== null ? (
-            <ImageGalleryItem galleryItems={galleryItems} />
-          ) : (
-            <p>ничего</p>
-          )}
-        </ImageGallery>
+        {error && <h1>{error.massage}</h1>}
+        {galleryItems && <ImageGallery items={galleryItems} />}
+        {galleryItems && <Button />}
         <ToastContainer />
-        <Button />
       </div>
     );
   }

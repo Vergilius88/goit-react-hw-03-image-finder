@@ -1,18 +1,17 @@
-import { Component } from "react";
 import "./importGalleryItem.css";
 
-function ImageGalleryItem({ galleryItems }) {
-  galleryItems.map((galleryItem) => {
-    return (
-      <li className="ImageGalleryItem" id={galleryItem.id}>
-        <img
-          src={galleryItem.previewURL}
-          alt={galleryItem.tags}
-          className="ImageGalleryItem-image"
-          largeImageUrl={galleryItem.largeImageURL}
-        />
-      </li>
-    );
-  });
-}
+const ImageGalleryItem = ({ item, openModal }) => {
+  return (
+    <li className="ImageGalleryItem" id={item.id}>
+      <img
+        src={item.webformatURL}
+        alt={item.tags}
+        className="ImageGalleryItem-image"
+        modalimage={item.largeImageURL}
+        onClick={openModal}
+      />
+    </li>
+  );
+};
+
 export default ImageGalleryItem;
