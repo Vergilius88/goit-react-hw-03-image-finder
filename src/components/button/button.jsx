@@ -1,16 +1,13 @@
 import "./button.css";
 
-window.scrollTo({
-  top: document.documentElement.scrollHeight,
-  behavior: "smooth",
-});
-
-export default function Button() {
+const Button = ({ handleButtonClick }) => {
   return (
     <>
-      <button type="button" className="Button">
+      <button type="button" className="Button" onClick={handleButtonClick}>
         Load more....
       </button>
     </>
   );
-}
+};
+
+export default Button;

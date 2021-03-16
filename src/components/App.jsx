@@ -1,7 +1,8 @@
 import { Component } from "react";
-import "./app.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+import "./app.css";
 
 import SearchBar from "./searchBar/searchBar";
 import ImageGallery from "./imageGallery/imageGallery";
@@ -21,6 +22,7 @@ export default class App extends Component {
   componentDidUpdate(_prevProps, prevState) {
     const prevKeyword = prevState.keyword;
     const nextKeyword = this.state.keyword;
+    const prevPage = prevState.page;
     const page = this.state.page;
 
     if (prevKeyword !== nextKeyword) {
@@ -32,23 +34,48 @@ export default class App extends Component {
         )
         .catch((error) => this.setState({ error, status: "reject" }));
     }
+    if (prevPage !== page) {
+      fetchGallery(nextKeyword, page)
+        .then((galleryArray) =>
+          this.setState({
+            galleryItems: [...this.state.galleryItems, ...galleryArray.hits],
+            status: "resolved",
+          })
+        )
+        .catch((error) => this.setState({ error, status: "reject" }));
+      // window.scrollBy({
+      //   top: document.documentElement.scrollHeight,
+      //   behavior: "smooth",
+      // });
+    }
   }
 
-  handleFormSubmit = (keyword) => {
+  handleFormSubmission = (keyword) => {
     this.setState({ keyword: keyword });
+    this.setState({ page: 1 });
   };
-  // openModal = (event) => {
-  //   modal((image = { event.currentTarget }));
-  // };
+  handleButtonClick = () => {
+    this.setState({ page: this.state.page + 1 });
+    const { keyword, page } = this.state;
+    fetchGallery(keyword, page);
+  };
+  openModal = (event) => {
+    console.log(event);
+  };
 
   render() {
-    const { galleryItems, error } = this.state;
+    const { galleryItems, error, status } = this.state;
     return (
       <div className="App">
-        <SearchBar formSubmit={this.handleFormSubmit} />
-        {error && <h1>{error.massage}</h1>}
-        {galleryItems && <ImageGallery items={galleryItems} />}
-        {galleryItems && <Button />}
+        <SearchBar formSubmit={this.handleFormSubmission} />
+        {status === "reject" && <h1>{error.massage}</h1>}
+        {status === "resolved" && (
+          <>
+            <ImageGallery items={galleryItems} modal={this.openModal} />
+            <Button handleButtonClick={this.handleButtonClick} />
+          </>
+        )}
+
         <ToastContainer />
       </div>
     );

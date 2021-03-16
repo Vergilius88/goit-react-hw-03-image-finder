@@ -5,7 +5,7 @@ const ImageGallery = ({ items, openModal }) => {
   return (
     <ul className="ImageGallery">
       {items.map((item) => (
-        <ImageGalleryItem item={item} openModal={openModal} />
+        <ImageGalleryItem item={item} onClick={openModal} />
       ))}
     </ul>
   );

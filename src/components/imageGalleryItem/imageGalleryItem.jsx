@@ -1,14 +1,13 @@
 import "./importGalleryItem.css";
 
-const ImageGalleryItem = ({ item, openModal }) => {
+const ImageGalleryItem = ({ item }) => {
   return (
-    <li className="ImageGalleryItem" id={item.id}>
+    <li id={item.id} className="ImageGalleryItem">
       <img
         src={item.webformatURL}
         alt={item.tags}
         className="ImageGalleryItem-image"
         modalimage={item.largeImageURL}
-        onClick={openModal}
       />
     </li>
   );
