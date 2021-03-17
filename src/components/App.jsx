@@ -7,7 +7,7 @@ import "./app.css";
 import SearchBar from "./searchBar/searchBar";
 import ImageGallery from "./imageGallery/imageGallery";
 import Button from "./button/button";
-// import Modal from "./modal/modal";
+import Modal from "./modal/modal";
 import fetchGallery from "../services/galleryAPI";
 
 export default class App extends Component {
@@ -17,6 +17,8 @@ export default class App extends Component {
     galleryItems: null,
     error: null,
     status: "idle",
+    showModal: false,
+    imgAttribute: false,
   };
 
   componentDidUpdate(_prevProps, prevState) {
@@ -59,23 +61,32 @@ export default class App extends Component {
     const { keyword, page } = this.state;
     fetchGallery(keyword, page);
   };
-  openModal = (event) => {
-    console.log(event);
+  handleOpenModal = (event) => {
+    this.setState(({ imgAttribute }) => ({
+      imgAttribute: { src: event.target.modalimage, alt: event.target.alt },
+    }));
+
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }));
+    console.log(event.target);
   };
 
   render() {
-    const { galleryItems, error, status } = this.state;
+    const { galleryItems, error, status, showModal, imgAttribute } = this.state;
     return (
       <div className="App">
+        {showModal && (
+          <Modal onClose={this.handleOpenModal} imgAttribute={imgAttribute} />
+        )}
         <SearchBar formSubmit={this.handleFormSubmission} />
         {status === "reject" && <h1>{error.massage}</h1>}
         {status === "resolved" && (
-          <>
-            <ImageGallery items={galleryItems} modal={this.openModal} />
-            <Button handleButtonClick={this.handleButtonClick} />
-          </>
+          <ImageGallery items={galleryItems} openModal={this.handleOpenModal} />
         )}
-
+        {status === "resolved" && (
+          <Button handleButtonClick={this.handleButtonClick} />
+        )}
         <ToastContainer />
       </div>
     );

@@ -1,8 +1,8 @@
 import "./importGalleryItem.css";
 
-const ImageGalleryItem = ({ item }) => {
+const ImageGalleryItem = ({ item, openModal }) => {
   return (
-    <li id={item.id} className="ImageGalleryItem">
+    <li key={item.id} className="ImageGalleryItem" onClick={openModal}>
       <img
         src={item.webformatURL}
         alt={item.tags}
