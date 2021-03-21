@@ -4,10 +4,7 @@ import "./modal.css";
 const modalRoot = document.querySelector("#modal-root");
 
 export default class Modal extends Component {
-  state = {
-    src: "",
-    alt: "",
-  };
+  state = {};
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown);
   }
@@ -26,10 +23,11 @@ export default class Modal extends Component {
   };
 
   render() {
+    const imgAttribute = this.props.imgAttribute;
     return createPortal(
       <div className="Overlay" onClick={this.handleBackdropClick}>
         <div className="Modal">
-          <img src="" alt="" />
+          <img src={imgAttribute.src} alt={imgAttribute.alt} />
         </div>
       </div>,
       modalRoot

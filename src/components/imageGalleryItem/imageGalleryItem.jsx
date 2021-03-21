@@ -7,7 +7,7 @@ const ImageGalleryItem = ({ item, openModal }) => {
         src={item.webformatURL}
         alt={item.tags}
         className="ImageGalleryItem-image"
-        modalimage={item.largeImageURL}
+        data-modalImage={item.largeImageURL}
       />
     </li>
   );
