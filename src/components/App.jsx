@@ -43,7 +43,6 @@ export default class App extends Component {
           });
         })
         .catch((error) => {
-          console.dir(error);
           this.setState({ error: error.message, status: "reject" });
         });
     }
